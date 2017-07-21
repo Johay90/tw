@@ -1146,25 +1146,10 @@ function turnOnHotkeys() {
         if (editingKey) {
             editKey(e);
         } else {
-          var row = window.top.$("#plunder_list tr").filter(":visible").eq(2);
-
+            var row = window.top.$("#plunder_list tr").filter(":visible").eq(2);
             var aButton = row.children("td").eq(9).find("a");
             var bButton = row.children("td").eq(10).find("a");
             var cButton = row.children("td").eq(11).find("a");
-
-            // I THINKT HE ABOVE WORKS
-
-  /*
-            var aButton = $("#plunder_list tr:first td:eq(9)").filter(":visible").find("a");
-            var bButton = $("#plunder_list tr:first td:eq(10)").filter(":visible").find("a");
-            var cButton = $("#plunder_list tr:first td:eq(11)").filter(":visible").find("a");*/
-
-
-          /*
-          var aButton = $("#plunder_list tr:first td:eq(9)").filter(":visible").find("a");
-          var bButton = $("#am_widget_Farm td:eq(10)").find("a");
-          var cButton = $("#am_widget_Farm td:eq(11)").find("a");
-          */
 
             switch (e.which) {
                 case keycodes.a:
@@ -1181,7 +1166,7 @@ function turnOnHotkeys() {
                     break;
                 case keycodes.master:
                     if (cansend && filtersApplied)
-                        selectMasterButton(row);
+                        selectMasterButton($("#plunder_list tr").filter(":visible").eq(2));
                     break;
                 case keycodes.left:
                     getNewVillage("p");
@@ -1357,13 +1342,10 @@ function selectMasterButton(row) {
     var p1 = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityOneProfile);
     var p2 = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityTwoProfile);
     var p3 = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityThreeProfile);
-    /*var aButton = row.children("td").eq(9).children("a");
-      var bButton = row.children("td").eq(10).children("a");
-      var cButton = row.children("td").eq(11).children("a");
-    */
-    var aButton = $("#am_widget_Farm td:eq(9)").find("a");
-    var bButton = $("#am_widget_Farm td:eq(10)").find("a");
-    var cButton = $("#am_widget_Farm td:eq(11)").find("a");
+    var aButton = row.children("td").eq(9).children("a");
+    var bButton = row.children("td").eq(10).children("a");
+    var cButton = row.children("td").eq(11).children("a");
+
     buttonToClick = keyPressSettings.defaultButton;
     if (keyPressSettings.priorityThreeEnabled && !checkRowToHide(row, p3)) {
         buttonToClick = keyPressSettings.priorityThreeButton;
