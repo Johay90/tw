@@ -1147,9 +1147,9 @@ function turnOnHotkeys() {
             editKey(e);
         } else {
             var row = window.top.$("#plunder_list tr").filter(":visible").eq(2);
-            var aButton = row.children("td").eq(9).find("a");
-            var bButton = row.children("td").eq(10).find("a");
-            var cButton = row.children("td").eq(11).find("a");
+            var aButton = row.children("td").eq(9).children("a");
+            var bButton = row.children("td").eq(10).children("a");
+            var cButton = row.children("td").eq(11).children("a");
 
             switch (e.which) {
                 case keycodes.a:
@@ -1166,7 +1166,7 @@ function turnOnHotkeys() {
                     break;
                 case keycodes.master:
                     if (cansend && filtersApplied)
-                        selectMasterButton($("#plunder_list tr").filter(":visible").eq(2));
+                        selectMasterButton(row);
                     break;
                 case keycodes.left:
                     getNewVillage("p");
