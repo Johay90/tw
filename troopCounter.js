@@ -7,6 +7,9 @@
  
  ==== pages where this can be used ==== 
  * Overviews -> Units -> All (screen=overview_villages&mode=units&type=complete)
+
+  ==== changelog ====
+ *	23 Oct 2019 - Fix for troops being counted twice. (Johay)
   
  ==== changelog ====
  *	18 June 2016 - created
