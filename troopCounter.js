@@ -582,7 +582,6 @@ if(fnHasArchers()){tsald=tsalkapone_trans.general.temp36; tsald2=tsalkapone_tran
 					/* Ignore In the village (your own, foreign + total) */
 					if(Math.floor(cell/colCount) != 1 && Math.floor(cell/colCount) != 4){ 
 						villageData.troops[cell%colCount-1] += parseInt($(eleCell).text()||"0",10);
-						console.log("cell/colCount = " + Math.floor(cell/colCount) + 'parseInt($(eleCell).text()||"0",10) = ' + parseInt($(eleCell).text()||"0",10));
 					}
 				}
 			});
