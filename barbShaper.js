@@ -29,6 +29,40 @@ addGoogleFont("Ubuntu");
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+VARS & ARRAYS
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+var desiredLevel = {
+        headquarters: 1, 
+        barracks: 0,
+        stable: 0,
+        workshop: 0,
+        smithy: 0,
+        rally: 0,
+        market: 0,
+        timber: 30,
+        clay: 30,
+        iron: 30,
+        farm: 1,
+        warehouse: 30
+    };
+
+var currentLevel = {
+        headquarters: 12, 
+        barracks: 5,
+        stable: 5,
+        workshop: 5,
+        smithy: 5,
+        rally: 0,
+        market: 0,
+        timber: 30,
+        clay: 25,
+        iron: 30,
+        farm: 17,
+        warehouse: 30
+    };
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 THE INTERFACE [MAP]
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -72,50 +106,49 @@ THE INTERFACE [MAP]
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/5pTo4s9.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
-            \
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             \
             <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
             <td align='center' class='lit-item'>20</td>\
             <td align='center' class='lit-item'>1</td>\
             <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'>test3</td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
+            \
+            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
+            <td align='center' class='lit-item'>20</td>\
+            <td align='center' class='lit-item'>1</td>\
+            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
+            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
             </tbody></table><br><br>testing..</div>\
         ");
         $("#shapeHeader").css({
