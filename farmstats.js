@@ -15,13 +15,14 @@ It basically estimated your farmed by the end of the day.
     var EstimatedPlundered = PlundersPerHour * 24;
     var htmlIns = '<table class="vis" style="width: 100%">\
 		<tbody><tr>\
-			<th>Farm Stats</th>\
+			<th colspan="2">Farm Stats</th>\
 		</tr>\
         <tr>\
             <tr> <td><label> ' + 'Projected Farm </td><td>' + EstimatedFarmed + '</label></td> </tr> \
             <tr> <td><label> ' + "Farmed Per Hour </td><td>" + FarmedPerHour + '</label></td> </tr> \
             <tr> <td><label> ' + "Each Res Per Hour </td><td>" + Math.round(FarmedPerHour / 3) + '</label></td> </tr> \
-            <tr><th>Plunder Stats</th></tr> \
+            <tr> <td><label> ' + "Each Res Per Day </td><td>" + Math.round(EstimatedFarmed / 3) + '</label></td> </tr> \
+            <tr><th colspan="2">Plunder Stats</th></tr> \
             <tr> <td><label> ' + "Plunders Per Hour </td><td>" + PlundersPerHour + '</label></td> </tr> \
             <tr> <td><label> ' + "Projected Plunders </td><td>" + EstimatedPlundered + '</label></td> </tr> \
             <tr> <td><label> ' + "Res Per Plunder </td><td>" + Math.round(EstimatedFarmed/EstimatedPlundered) + '</label></td> </tr> \
