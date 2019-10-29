@@ -5,6 +5,9 @@ PROGRESS
 
 
 TODO
+- Need to finish the buttons (need to figoure out how i'll do this), prolly tomorrow.
+- Some sort of auto-updating of the html? Tomorrow.
+
 - UI FUNCTIONABLE (Inclu functioning cat table etc, village cords, etc)
 - Units input, cord input etc, click event etc. 
 - Scout section (import village/buildings level into our arrays/cookies etc)
@@ -14,12 +17,14 @@ RESOURCES
 cat table: https://help.tribalwars.net/wiki/Charts
 
 COMMENT
-The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png) which I found on the forum. I loved the idea behind this. I'm aware this idea was never TW approved, but fuck it. It's not breaking any rules; the idea is really cool. 
+1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png) which I found on the forum. I loved the idea behind this. I'm aware this idea was never TW approved, but fuck it. It's not breaking any rules; the idea is really cool. 
+
+2) Layout/UI code is pretty fucking messy and all over the place. If you ever want to change the UI I hope you like spaghetti.
 */
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Font Import(s)
+Font Import(s)      - Not currently planning on doing much more with Ui for more fonts, but I sometimes do use a lot of fonts to keeping this function for now.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 function addGoogleFont(FontName) {
@@ -29,9 +34,10 @@ addGoogleFont("Ubuntu");
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-VARS & ARRAYS
+VARS & ARRAYS, Objs
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+var shapedImage;
 var desiredLevel = {
         headquarters: 1, 
         barracks: 0,
@@ -44,11 +50,12 @@ var desiredLevel = {
         clay: 30,
         iron: 30,
         farm: 1,
+        hiding: 10,
         warehouse: 30
     };
 
-var currentLevel = {
-        headquarters: 12, 
+var currentLevel = { // this obj will be collected later via scout section. Currently values just for testing.
+        headquarters: 1, 
         barracks: 5,
         stable: 5,
         workshop: 5,
@@ -59,8 +66,39 @@ var currentLevel = {
         clay: 25,
         iron: 30,
         farm: 17,
+        hiding: 10,
         warehouse: 30
     };
+
+   /* don't need this anymore? I was a dumb dumb.
+   for (let index = 0; index < 12; index++) {
+            if (['farm', 'headquarters'].indexOf(Object.keys(currentLevel)[index]) >= 0) { 
+                // We can or should only knock these to level 1. So need to do a check this way. 
+                console.log("Found " + Object.keys(currentLevel)[index]);
+        }
+    }
+    */
+
+function updateUI(buildName) {
+    var html = "<td align='center' class='lit-item'>" + currentLevel[buildName] + "</td><td align='center' class='lit-item'>" + desiredLevel[buildName];
+
+    if (buildName == "hiding") { // No button + Tick (We can't do anything with hiding place so we pretty much ignore).
+        return html + "</td><td align='center' class='lit-item'><img width='20px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
+    }
+    else if (['warehouse', 'iron', 'clay', 'timber'].indexOf(buildName) >= 0) { // No button, but shaped icon should be active (We don't want to damage these but having the shaped tick or x is nice).
+
+        if (parseInt(currentLevel[buildName]) == parseInt(desiredLevel[buildName])) {
+            return html + "</td><td align='center' class='lit-item'><img width='20px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
+        } 
+        else{
+            return html + "</td><td align='center' class='lit-item'><img width='20px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/x.png'></td><td align='center' class='lit-item'></td>";
+        }
+    } else if (parseInt(currentLevel[buildName]) != parseInt(desiredLevel[buildName])) {
+        return html + "</td><td align='center' class='lit-item'><img width='20px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/x.png'></td><td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>"
+    } else {
+        return html + "</td><td align='center' class='lit-item'><img width='20px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>"
+        }
+}
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 THE INTERFACE [MAP]
@@ -102,53 +140,19 @@ THE INTERFACE [MAP]
             <th style='text-align:center !important'>Shaped</th>\
             <th style='text-align:center !important'>Button</th>\
             \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/5pTo4s9.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
-            \
-            <tr><td align='center' class='lit-item'><img src='https://i.imgur.com/K2hWz63.png'></td>\
-            <td align='center' class='lit-item'>20</td>\
-            <td align='center' class='lit-item'>1</td>\
-            <td align='center' class='lit-item'><img width='20px' src='https://i.imgur.com/e09IQ4s.png'></td>\
-            <td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' id='building_attack'>Send Attack!</button></td>\
+            <tr title='Headquarters'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/hq.png'></td> " + updateUI('headquarters') + "\
+            <tr title='Barracks'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/rax.png'></td> " + updateUI('barracks') + "\
+            <tr title='Stable'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/stable.png'></td> " + updateUI('stable') + "\
+            <tr title='Workshop'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/workshop.png'></td> " + updateUI('workshop') + "\
+            <tr title='Smithy'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/smith.png'></td> " + updateUI('smithy') + "\
+            <tr title='Rally Point'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/rally.png'></td> " + updateUI('rally') + "\
+            <tr title='Market'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/market.png'></td> " + updateUI('market') + "\
+            <tr title='Timber'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/wood.png'></td> " + updateUI('timber') + "\
+            <tr title='Clay'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/stone.png'></td> " + updateUI('clay') + "\
+            <tr title='Iron'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/iron.png'></td> " + updateUI('iron') + "\
+            <tr title='Farm'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/farm.png'></td> " + updateUI('farm') + "\
+            <tr title='Warehouse'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('warehouse') + "\
+            <tr title='Hiding Place'><td align='center' class='lit-item'><img src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hiding') + "\
             </tbody></table><br><br>testing..</div>\
         ");
         $("#shapeHeader").css({
@@ -158,10 +162,8 @@ THE INTERFACE [MAP]
         $("#shapeBody").css({
              "background-color": "#f4e4bc"
          }); 
-        $('#shapeHeader > table, #shapeBody > table').css({
-           // "border": "1px solid #bfa473"
-        }); 
         $('#shapeBody > table, #shapeBody > table > tbody > tr > th, #shapeBody > table > tbody > tr > td').css({
            "border": "1px solid #bfa473",
             "border-collapse": "collapse"
         }); 
+        $("#shapeBody").tooltip({show: null,position: {my: "left top",at: "left bottom"},open: function(event, ui) {ui.tooltip.animate({ top: ui.tooltip.position().top +10 }, "fast" );}});
