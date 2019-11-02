@@ -22,6 +22,10 @@ It basically estimated your farmed by the end of the day.
             <tr> <td><label> ' + "Farmed Per Hour </td><td>" + FarmedPerHour + '</label></td> </tr> \
             <tr> <td><label> ' + "Each Res Per Hour </td><td>" + Math.round(FarmedPerHour / 3) + '</label></td> </tr> \
             <tr> <td><label> ' + "Each Res Per Day </td><td>" + Math.round(EstimatedFarmed / 3) + '</label></td> </tr> \
+            <tr><th colspan="2">Warehouse Stats</th></tr> \
+            <tr> <td><label> ' + 'Wood will be full in (h) </td><td>' + Math.round((parseInt($('#storage').text()) - parseInt($('#wood').text())) / Math.round(FarmedPerHour / 3) * 100) / 100 + '</label></td> </tr> \
+            <tr> <td><label> ' + 'Clay will be full in (h) </td><td>' + Math.round((parseInt($('#storage').text()) - parseInt($('#stone').text())) / Math.round(FarmedPerHour / 3) * 100) / 100 + '</label></td> </tr> \
+            <tr> <td><label> ' + 'Iron will be full in (h) </td><td>' + Math.round((parseInt($('#storage').text()) - parseInt($('#iron').text())) / Math.round(FarmedPerHour / 3) * 100) / 100 + '</label></td> </tr> \
             <tr><th colspan="2">Plunder Stats</th></tr> \
             <tr> <td><label> ' + "Plunders Per Hour </td><td>" + PlundersPerHour + '</label></td> </tr> \
             <tr> <td><label> ' + "Projected Plunders </td><td>" + EstimatedPlundered + '</label></td> </tr> \
