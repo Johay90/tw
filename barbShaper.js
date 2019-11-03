@@ -1,15 +1,6 @@
 /* -- THIS SCRIPT IS HEAVY WIP, NOT EVEN NEARLY WORKING
 
-PROGRESS
-- UI is pretty much done now
-- Auto updating UI is done (need to switch click events around once we implement sending)
-- backend is done for amount of cats to send
-- barb info is done (for the interface, not scouting)
-- Scouting is somewhat done
-
-
 Next TODOs
-- Add check for map, if cords exist
 - Sending and click events/checks for this (saving this for last since we don't have cats unlocked yet....)
 - Notebook
 
@@ -116,97 +107,101 @@ THE INTERFACE [MAP]
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 if (game_data['screen'] == "map") {
 
-    var main = "636|464".split("|"); // TODO: need to add curr village
-    var target = getCookie("barbShaper_cord").split("|");
-    var barbTarget = new Object();
-    barbTarget.x = target[0];
-    barbTarget.y = target[1]; 
+    if(typeof getCookie("barbShaper_cord") !== 'undefined') { 
+        var main = "636|464".split("|"); // TODO: need to add curr village
+        var target = getCookie("barbShaper_cord").split("|");
+        var barbTarget = new Object();
+        barbTarget.x = target[0];
+        barbTarget.y = target[1]; 
 
-    $('#mapx').val(barbTarget.x);
-    $('#mapy').val(barbTarget.y);
-    $('#map_topo > form > table > tbody > tr:nth-child(2) > td:nth-child(2) > input')[0].click();
+        $('#mapx').val(barbTarget.x);
+        $('#mapy').val(barbTarget.y);
+        $('#map_topo > form > table > tbody > tr:nth-child(2) > td:nth-child(2) > input')[0].click();
 
-    setTimeout(function() {
-        for (let index = 0; index < Object.keys(TWMap.villages).length; index++) {
-            if (parseInt(barbTarget.x + barbTarget.y) == TWMap.villages[Object.keys(TWMap.villages)[index]].xy) {
-                barbTarget.name = TWMap.villages[Object.keys(TWMap.villages)[index]].name;
-                barbTarget.points = TWMap.villages[Object.keys(TWMap.villages)[index]].points;
-                break; 
+        setTimeout(function() {
+            for (let index = 0; index < Object.keys(TWMap.villages).length; index++) {
+                if (parseInt(barbTarget.x + barbTarget.y) == TWMap.villages[Object.keys(TWMap.villages)[index]].xy) {
+                    barbTarget.name = TWMap.villages[Object.keys(TWMap.villages)[index]].name;
+                    barbTarget.points = TWMap.villages[Object.keys(TWMap.villages)[index]].points;
+                    break; 
+                }
             }
-        }
-    
-        var fieds = [];
-        for (let index = 0; index <= 1; index++) {
-            fieds.push(Math.abs(parseInt(main[index])) - Math.abs(parseInt(target[index])));
-        }
-        catTravelTime = 30;
-        q = Math.sqrt(Math.pow(fieds[0], 2) + Math.pow(fieds[1], 2));
-        var hours = (q * 30 / 60);
-        var rhours = Math.floor(hours);
-        var minutes = (hours - rhours) * 60;
-        var rminutes = Math.round(minutes);
-        if (rhours < 10) {rhours = "0" + rhours}
-        if (rminutes < 10) {rminutes = "0" + rminutes}
-        barbTarget.travel = rhours+":"+rminutes;
-    
-    
-        $("<div></div>").attr('id', 'shapeGUI').insertAfter('body');
-        $("#shapeGUI").css({"width": "400px","border": "1px solid #a48341","margin": "0","position": "fixed","top": "50px","font-family":"'Open Sans', sans-serif","right": "0","height": "auto","z-index": "21","background-color": "#f4e4bc"});   
-        $("#shapeGUI").draggable();
-        $('#shapeGUI').append("<div id='shapeHeader'></div>");
-        $('#shapeGUI').append("<div id='shapeBody'></div>");
-    
-        function updateContent(){
-            $('#shapeHeader').html("<h2 style='text-align:center'>Barb Shaper</h2>\
-                <table class='vis' style='width: 100%'><tbody>\
-                <tr><th style='text-align:center !important'>Cord</th>\
-                <th style='text-align:center !important'>Village Name</th>\
-                <th style='text-align:center !important'>Travel Time (h:m)</th>\
-                <th style='text-align:center !important'>Points</th>\
-                <tr><td align='center' class='lit-item'>" + barbTarget.x + "|" + barbTarget.y + "</td>\
-                <td align='center' class='lit-item'>" + barbTarget.name + "</td>\
-                <td align='center' class='lit-item'>" + barbTarget.travel + "</td>\
-                <td align='center' class='lit-item'>" + barbTarget.points + "</td>\
-                </tbody></table><hr>");
-    
-            $('#shapeBody').html("<table class='vis' style='width: 100%'><tbody>\
-                <tr><th style='text-align:center !important'>Building</th>\
-                <th style='text-align:center !important'>Current Level</th>\
-                <th style='text-align:center !important'>Target</th>\
-                <th style='text-align:center !important'>Shaped</th>\
-                <th style='text-align:center !important'>Button</th>\
-                <tr title='Headquarters'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hq.png'></td> " + updateUI('headquarters') + "\
-                <tr title='Barracks'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rax.png'></td> " + updateUI('barracks') + "\
-                <tr title='Stable'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stable.png'></td> " + updateUI('stable') + "\
-                <tr title='Workshop'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/workshop.png'></td> " + updateUI('workshop') + "\
-                <tr title='Smithy'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/smith.png'></td> " + updateUI('smithy') + "\
-                <tr title='Rally Point'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rally.png'></td> " + updateUI('rally') + "\
-                <tr title='Market'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/market.png'></td> " + updateUI('market') + "\
-                <tr title='Timber'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/wood.png'></td> " + updateUI('timber') + "\
-                <tr title='Clay'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stone.png'></td> " + updateUI('clay') + "\
-                <tr title='Iron'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/iron.png'></td> " + updateUI('iron') + "\
-                <tr title='Farm'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/farm.png'></td> " + updateUI('farm') + "\
-                <tr title='Warehouse'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('warehouse') + "\
-                <tr title='Hiding Place'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hiding') + "\
-                </tbody></table>");
-    
-            $("#shapeHeader").css({"background-color": "#c1a264","padding-top":"25px"});
-            $('#shapeHeader > table > tbody > tr > th, #shapeBody > table > tbody > tr > th').css({"font-size": "14px","font-family": "'Open Sans', sans-serif", "font-weight": "Bold"});
-            $('#shapeHeader > table > tbody > tr > td, #shapeBody > table > tbody > tr > td').css({"font-size": "12px","font-family": "'Open Sans', sans-serif","padding":"5px 0px 5px 0px"});
-            $("#shapeBody").css({ "background-color": "#f4e4bc"}); 
-            $('#shapeBody > table, #shapeBody > table > tbody > tr > th, #shapeBody > table > tbody > tr > td').css({"border": "1px solid #bfa473","border-collapse":"collapse"}); 
-            $("#shapeBody").tooltip({show: null,position: {my: "left top",at: "left bottom"},open: function(event, ui) {ui.tooltip.animate({ top: ui.tooltip.position().top +10 }, "fast" );}});
-            $('button[name="catButton"]').click(function(){sendCats = catTable[currentLevel[this.value]];
-                /* following code is for our "success" click event later on. */
-                currentLevel[this.value] = currentLevel[this.value]-1;
-                console.log(currentLevel[this.value]);
-                updateContent();
-                /* */
-            });
-        }
-        updateContent();   
         
-    }, 300);
+            var fieds = [];
+            for (let index = 0; index <= 1; index++) {
+                fieds.push(Math.abs(parseInt(main[index])) - Math.abs(parseInt(target[index])));
+            }
+            catTravelTime = 30;
+            q = Math.sqrt(Math.pow(fieds[0], 2) + Math.pow(fieds[1], 2));
+            var hours = (q * 30 / 60);
+            var rhours = Math.floor(hours);
+            var minutes = (hours - rhours) * 60;
+            var rminutes = Math.round(minutes);
+            if (rhours < 10) {rhours = "0" + rhours}
+            if (rminutes < 10) {rminutes = "0" + rminutes}
+            barbTarget.travel = rhours+":"+rminutes;
+        
+        
+            $("<div></div>").attr('id', 'shapeGUI').insertAfter('body');
+            $("#shapeGUI").css({"width": "400px","border": "1px solid #a48341","margin": "0","position": "fixed","top": "50px","font-family":"'Open Sans', sans-serif","right": "0","height": "auto","z-index": "21","background-color": "#f4e4bc"});   
+            $("#shapeGUI").draggable();
+            $('#shapeGUI').append("<div id='shapeHeader'></div>");
+            $('#shapeGUI').append("<div id='shapeBody'></div>");
+        
+            function updateContent(){
+                $('#shapeHeader').html("<h2 style='text-align:center'>Barb Shaper</h2>\
+                    <table class='vis' style='width: 100%'><tbody>\
+                    <tr><th style='text-align:center !important'>Cord</th>\
+                    <th style='text-align:center !important'>Village Name</th>\
+                    <th style='text-align:center !important'>Travel Time (h:m)</th>\
+                    <th style='text-align:center !important'>Points</th>\
+                    <tr><td align='center' class='lit-item'>" + barbTarget.x + "|" + barbTarget.y + "</td>\
+                    <td align='center' class='lit-item'>" + barbTarget.name + "</td>\
+                    <td align='center' class='lit-item'>" + barbTarget.travel + "</td>\
+                    <td align='center' class='lit-item'>" + barbTarget.points + "</td>\
+                    </tbody></table><hr>");
+        
+                $('#shapeBody').html("<table class='vis' style='width: 100%'><tbody>\
+                    <tr><th style='text-align:center !important'>Building</th>\
+                    <th style='text-align:center !important'>Current Level</th>\
+                    <th style='text-align:center !important'>Target</th>\
+                    <th style='text-align:center !important'>Shaped</th>\
+                    <th style='text-align:center !important'>Button</th>\
+                    <tr title='Headquarters'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hq.png'></td> " + updateUI('headquarters') + "\
+                    <tr title='Barracks'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rax.png'></td> " + updateUI('barracks') + "\
+                    <tr title='Stable'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stable.png'></td> " + updateUI('stable') + "\
+                    <tr title='Workshop'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/workshop.png'></td> " + updateUI('workshop') + "\
+                    <tr title='Smithy'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/smith.png'></td> " + updateUI('smithy') + "\
+                    <tr title='Rally Point'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rally.png'></td> " + updateUI('rally') + "\
+                    <tr title='Market'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/market.png'></td> " + updateUI('market') + "\
+                    <tr title='Timber'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/wood.png'></td> " + updateUI('timber') + "\
+                    <tr title='Clay'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stone.png'></td> " + updateUI('clay') + "\
+                    <tr title='Iron'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/iron.png'></td> " + updateUI('iron') + "\
+                    <tr title='Farm'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/farm.png'></td> " + updateUI('farm') + "\
+                    <tr title='Warehouse'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('warehouse') + "\
+                    <tr title='Hiding Place'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hiding') + "\
+                    </tbody></table>");
+        
+                $("#shapeHeader").css({"background-color": "#c1a264","padding-top":"25px"});
+                $('#shapeHeader > table > tbody > tr > th, #shapeBody > table > tbody > tr > th').css({"font-size": "14px","font-family": "'Open Sans', sans-serif", "font-weight": "Bold"});
+                $('#shapeHeader > table > tbody > tr > td, #shapeBody > table > tbody > tr > td').css({"font-size": "12px","font-family": "'Open Sans', sans-serif","padding":"5px 0px 5px 0px"});
+                $("#shapeBody").css({ "background-color": "#f4e4bc"}); 
+                $('#shapeBody > table, #shapeBody > table > tbody > tr > th, #shapeBody > table > tbody > tr > td').css({"border": "1px solid #bfa473","border-collapse":"collapse"}); 
+                $("#shapeBody").tooltip({show: null,position: {my: "left top",at: "left bottom"},open: function(event, ui) {ui.tooltip.animate({ top: ui.tooltip.position().top +10 }, "fast" );}});
+                $('button[name="catButton"]').click(function(){sendCats = catTable[currentLevel[this.value]];
+                    /* following code is for our "success" click event later on. */
+                    currentLevel[this.value] = currentLevel[this.value]-1;
+                    console.log(currentLevel[this.value]);
+                    updateContent();
+                    /* */
+                });
+            }
+            updateContent();   
+            
+        }, 300);           
+    }else{
+        alert("No scout report found");
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -214,9 +209,6 @@ if (game_data['screen'] == "map") {
 SCOUTING
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-// need to check if scout report
-
 if (game_data['screen'] == "report") {
     var delete_cookie = function(name) {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
