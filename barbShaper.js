@@ -77,7 +77,7 @@ var currentLevel = {
 
 function updateUI(buildName) {
     var html = "<td align='center' class='lit-item'>" + currentLevel[buildName] + "</td><td align='center' class='lit-item'>" + desiredLevel[buildName];
-    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value="+ buildName + " name='catButton'>Send Attack!</a></td>";
+    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value="+ buildName + " name='catButton'>Send Attack!</button></td>";
 
     if (buildName == "hiding") {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
