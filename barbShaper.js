@@ -1,17 +1,14 @@
-/* -- THIS SCRIPT IS HEAVY WIP, NOT EVEN NEARLY WORKING
+/* -- WIP, done soon.
 
 Next TODOs
 - Sending and click events/checks for this (saving this for last since we don't have cats unlocked yet....)
 - Notebook
 
-SEND
-- Function -> return as array?
 
 COMMENT
-The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png) which I found on the forum. I loved the idea behind this. I'm aware this idea was never TW approved, but fuck it. It's not breaking any rules; the idea is really cool. 
+1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png) which I found on the forum. I loved the idea behind this. I'm aware this idea was never TW approved, but fuck it. It's not breaking any rules; the idea is really cool. My implementation is much much more simpler.
 
-Unhappy with code, super messy. When I started a certain approach I was to lazy to do it another/better way. Things work, and this is this a quick script.
-*/
+2) Way I coded the function reloadUI is horriiiible, by the time I finished it i'm just to lazy to implement another apporach, but it's bad.
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -80,7 +77,7 @@ var currentLevel = {
 
 function updateUI(buildName) {
     var html = "<td align='center' class='lit-item'>" + currentLevel[buildName] + "</td><td align='center' class='lit-item'>" + desiredLevel[buildName];
-    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value="+ buildName + " name='catButton'>Send Attack!</button></td>";
+    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value="+ buildName + " name='catButton'>Send Attack!</a></td>";
 
     if (buildName == "hiding") {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
@@ -123,6 +120,7 @@ if (game_data['screen'] == "map") {
                 if (parseInt(barbTarget.x + barbTarget.y) == TWMap.villages[Object.keys(TWMap.villages)[index]].xy) {
                     barbTarget.name = TWMap.villages[Object.keys(TWMap.villages)[index]].name;
                     barbTarget.points = TWMap.villages[Object.keys(TWMap.villages)[index]].points;
+                    barbTarget.id = TWMap.villages[Object.keys(TWMap.villages)[index]].id
                     break; 
                 }
             }
@@ -191,7 +189,7 @@ if (game_data['screen'] == "map") {
                 $('button[name="catButton"]').click(function(){sendCats = catTable[currentLevel[this.value]];
                     /* following code is for our "success" click event later on. */
                     currentLevel[this.value] = currentLevel[this.value]-1;
-                    console.log(currentLevel[this.value]);
+                    CommandPopup.openRallyPoint({target:barbTarget.id});
                     updateContent();
                     /* */
                 });
