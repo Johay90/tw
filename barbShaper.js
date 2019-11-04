@@ -30,71 +30,69 @@ function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
-  }
+}
 
 function buildCheck(name) { // This was a silly/bad way to do this, but meh. 
-    if (Number.isNaN(parseInt(getCookie(name)))){
+    if (Number.isNaN(parseInt(getCookie(name)))) {
         return 0;
-    } else{
+    } else {
         return parseInt(getCookie(name));
     }
 }
 
 var sendCats;
-var catTable = [0,2,2,2,3,3,3,3,3,4,4,4,5,5,6,6,6,7,8,8,9,10,10,11,12,13,15,16,17,19,20];
+var catTable = [0, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 7, 8, 8, 9, 10, 10, 11, 12, 13, 15, 16, 17, 19, 20];
 
 var desiredLevel = {
-        headquarters: 1, 
-        barracks: 0,
-        stable: 0,
-        workshop: 0,
-        smithy: 0,
-        rally: 0,
-        market: 0,  
-        timber: 30,
-        clay: 30,
-        iron: 30,
-        farm: 1,
-        hiding: 10,
-        warehouse: 30
-    };
+    headquarters: 1,
+    barracks: 0,
+    stable: 0,
+    workshop: 0,
+    smithy: 0,
+    rally: 0,
+    market: 0,
+    timber: 30,
+    clay: 30,
+    iron: 30,
+    farm: 1,
+    hiding: 10,
+    warehouse: 30
+};
 
 var currentLevel = {
-        headquarters: parseInt(buildCheck("barbShaper_main")),
-        barracks: parseInt(buildCheck("barbShaper_barracks")),
-        stable: parseInt(buildCheck("barbShaper_stable")),
-        workshop: parseInt(buildCheck("barbShaper_barracks")), // ??
-        smithy: parseInt(buildCheck("barbShaper_smith")),
-        rally: parseInt(buildCheck("barbShaper_place")),
-        market: parseInt(buildCheck("barbShaper_market")),
-        timber: parseInt(buildCheck("barbShaper_wood")),
-        clay: parseInt(buildCheck("barbShaper_stone")),
-        iron: parseInt(buildCheck("barbShaper_iron")),
-        farm: parseInt(buildCheck("barbShaper_farm")),
-        hiding: parseInt(buildCheck("barbShaper_hide")),
-        warehouse: parseInt(buildCheck("barbShaper_storage")) 
-    }; 
+    headquarters: parseInt(buildCheck("barbShaper_main")),
+    barracks: parseInt(buildCheck("barbShaper_barracks")),
+    stable: parseInt(buildCheck("barbShaper_stable")),
+    workshop: parseInt(buildCheck("barbShaper_barracks")), // ??
+    smithy: parseInt(buildCheck("barbShaper_smith")),
+    rally: parseInt(buildCheck("barbShaper_place")),
+    market: parseInt(buildCheck("barbShaper_market")),
+    timber: parseInt(buildCheck("barbShaper_wood")),
+    clay: parseInt(buildCheck("barbShaper_stone")),
+    iron: parseInt(buildCheck("barbShaper_iron")),
+    farm: parseInt(buildCheck("barbShaper_farm")),
+    hiding: parseInt(buildCheck("barbShaper_hide")),
+    warehouse: parseInt(buildCheck("barbShaper_storage"))
+};
 
 function updateUI(buildName) {
     var html = "<td align='center' class='lit-item'>" + currentLevel[buildName] + "</td><td align='center' class='lit-item'>" + desiredLevel[buildName];
-    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value="+ buildName + " name='catButton'>Send Attack!</button></td>";
+    var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value=" + buildName + " name='catButton'>Send Attack!</button></td>";
 
     if (buildName == "hiding") {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
-    }
-    else if (['warehouse', 'iron', 'clay', 'timber'].indexOf(buildName) >= 0) {
+    } else if (['warehouse', 'iron', 'clay', 'timber'].indexOf(buildName) >= 0) {
 
         if (parseInt(currentLevel[buildName]) == parseInt(desiredLevel[buildName])) {
             return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
-        } 
-        else{
+        } else {
             return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/x.png'></td><td align='center' class='lit-item'></td>";
         }
     } else if (parseInt(currentLevel[buildName]) != parseInt(desiredLevel[buildName])) {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/x.png'></td>" + button;
     } else {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
-        }
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -104,27 +102,27 @@ THE INTERFACE [MAP]
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 if (game_data['screen'] == "map") {
 
-    if(typeof getCookie("barbShaper_cord") !== 'undefined') { 
+    if (typeof getCookie("barbShaper_cord") !== 'undefined') {
         var main = "636|464".split("|"); // TODO: need to add curr village
         var target = getCookie("barbShaper_cord").split("|");
         var barbTarget = new Object();
         barbTarget.x = target[0];
-        barbTarget.y = target[1]; 
+        barbTarget.y = target[1];
 
         $('#mapx').val(barbTarget.x);
         $('#mapy').val(barbTarget.y);
         $('#map_topo > form > table > tbody > tr:nth-child(2) > td:nth-child(2) > input')[0].click();
 
-        setTimeout(function() {
+        setTimeout(function () {
             for (let index = 0; index < Object.keys(TWMap.villages).length; index++) {
                 if (parseInt(barbTarget.x + barbTarget.y) == TWMap.villages[Object.keys(TWMap.villages)[index]].xy) {
                     barbTarget.name = TWMap.villages[Object.keys(TWMap.villages)[index]].name;
                     barbTarget.points = TWMap.villages[Object.keys(TWMap.villages)[index]].points;
                     barbTarget.id = TWMap.villages[Object.keys(TWMap.villages)[index]].id
-                    break; 
+                    break;
                 }
             }
-        
+
             var fieds = [];
             for (let index = 0; index <= 1; index++) {
                 fieds.push(Math.abs(parseInt(main[index])) - Math.abs(parseInt(target[index])));
@@ -135,18 +133,33 @@ if (game_data['screen'] == "map") {
             var rhours = Math.floor(hours);
             var minutes = (hours - rhours) * 60;
             var rminutes = Math.round(minutes);
-            if (rhours < 10) {rhours = "0" + rhours}
-            if (rminutes < 10) {rminutes = "0" + rminutes}
-            barbTarget.travel = rhours+":"+rminutes;
-        
-        
+            if (rhours < 10) {
+                rhours = "0" + rhours
+            }
+            if (rminutes < 10) {
+                rminutes = "0" + rminutes
+            }
+            barbTarget.travel = rhours + ":" + rminutes;
+
+
             $("<div></div>").attr('id', 'shapeGUI').insertAfter('body');
-            $("#shapeGUI").css({"width": "400px","border": "1px solid #a48341","margin": "0","position": "fixed","top": "50px","font-family":"'Open Sans', sans-serif","right": "0","height": "auto","z-index": "21","background-color": "#f4e4bc"});   
+            $("#shapeGUI").css({
+                "width": "400px",
+                "border": "1px solid #a48341",
+                "margin": "0",
+                "position": "fixed",
+                "top": "50px",
+                "font-family": "'Open Sans', sans-serif",
+                "right": "0",
+                "height": "auto",
+                "z-index": "21",
+                "background-color": "#f4e4bc"
+            });
             $("#shapeGUI").draggable();
             $('#shapeGUI').append("<div id='shapeHeader'></div>");
             $('#shapeGUI').append("<div id='shapeBody'></div>");
-        
-            function updateContent(){
+
+            function updateContent() {
                 $('#shapeHeader').html("<h2 style='text-align:center'>Barb Shaper</h2>\
                     <table class='vis' style='width: 100%'><tbody>\
                     <tr><th style='text-align:center !important'>Cord</th>\
@@ -158,7 +171,7 @@ if (game_data['screen'] == "map") {
                     <td align='center' class='lit-item'>" + barbTarget.travel + "</td>\
                     <td align='center' class='lit-item'>" + barbTarget.points + "</td>\
                     </tbody></table><hr>");
-        
+
                 $('#shapeBody').html("<table class='vis' style='width: 100%'><tbody>\
                     <tr><th style='text-align:center !important'>Building</th>\
                     <th style='text-align:center !important'>Current Level</th>\
@@ -179,25 +192,55 @@ if (game_data['screen'] == "map") {
                     <tr title='Warehouse'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('warehouse') + "\
                     <tr title='Hiding Place'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hiding') + "\
                     </tbody></table>");
-        
-                $("#shapeHeader").css({"background-color": "#c1a264","padding-top":"25px"});
-                $('#shapeHeader > table > tbody > tr > th, #shapeBody > table > tbody > tr > th').css({"font-size": "14px","font-family": "'Open Sans', sans-serif", "font-weight": "Bold"});
-                $('#shapeHeader > table > tbody > tr > td, #shapeBody > table > tbody > tr > td').css({"font-size": "12px","font-family": "'Open Sans', sans-serif","padding":"5px 0px 5px 0px"});
-                $("#shapeBody").css({ "background-color": "#f4e4bc"}); 
-                $('#shapeBody > table, #shapeBody > table > tbody > tr > th, #shapeBody > table > tbody > tr > td').css({"border": "1px solid #bfa473","border-collapse":"collapse"}); 
-                $("#shapeBody").tooltip({show: null,position: {my: "left top",at: "left bottom"},open: function(event, ui) {ui.tooltip.animate({ top: ui.tooltip.position().top +10 }, "fast" );}});
-                $('button[name="catButton"]').click(function(){sendCats = catTable[currentLevel[this.value]];
+
+                $("#shapeHeader").css({
+                    "background-color": "#c1a264",
+                    "padding-top": "25px"
+                });
+                $('#shapeHeader > table > tbody > tr > th, #shapeBody > table > tbody > tr > th').css({
+                    "font-size": "14px",
+                    "font-family": "'Open Sans', sans-serif",
+                    "font-weight": "Bold"
+                });
+                $('#shapeHeader > table > tbody > tr > td, #shapeBody > table > tbody > tr > td').css({
+                    "font-size": "12px",
+                    "font-family": "'Open Sans', sans-serif",
+                    "padding": "5px 0px 5px 0px"
+                });
+                $("#shapeBody").css({
+                    "background-color": "#f4e4bc"
+                });
+                $('#shapeBody > table, #shapeBody > table > tbody > tr > th, #shapeBody > table > tbody > tr > td').css({
+                    "border": "1px solid #bfa473",
+                    "border-collapse": "collapse"
+                });
+                $("#shapeBody").tooltip({
+                    show: null,
+                    position: {
+                        my: "left top",
+                        at: "left bottom"
+                    },
+                    open: function (event, ui) {
+                        ui.tooltip.animate({
+                            top: ui.tooltip.position().top + 10
+                        }, "fast");
+                    }
+                });
+                $('button[name="catButton"]').click(function () {
+                    sendCats = catTable[currentLevel[this.value]];
                     /* following code is for our "success" click event later on. */
-                    currentLevel[this.value] = currentLevel[this.value]-1;
-                    CommandPopup.openRallyPoint({target:barbTarget.id});
+                    currentLevel[this.value] = currentLevel[this.value] - 1;
+                    CommandPopup.openRallyPoint({
+                        target: barbTarget.id
+                    });
                     updateContent();
                     /* */
                 });
             }
-            updateContent();   
-            
-        }, 300);           
-    }else{
+            updateContent();
+
+        }, 300);
+    } else {
         alert("No scout report found");
     }
 }
@@ -208,25 +251,22 @@ SCOUTING
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 if (game_data['screen'] == "report") {
-    var delete_cookie = function(name) {
+    var delete_cookie = function (name) {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    };   
-    
+    };
+
     if ($('#attack_spy_buildings_left').length) {
         var json = JSON.parse($('#attack_spy_building_data').val());
         var arrBuildName = ["main", "cord", "barracks", "stable", "smith", "place", "market", "wood", "stone", "iron", "farm", "hide", "storage"]; // need to add stbale + workshop
         for (let index = 0; index <= arrBuildName.length; index++) {
             delete_cookie('barbShaper_' + arrBuildName[index]);
         }
-        for(var i = 0; i < json.length; i++) {
+        for (var i = 0; i < json.length; i++) {
             var obj = json[i];
-            document.cookie = "barbShaper_" + obj.id +  "=" + obj.level;
-        }   
-        document.cookie = "barbShaper_cord="  + $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1];
-    } else{
+            document.cookie = "barbShaper_" + obj.id + "=" + obj.level;
+        }
+        document.cookie = "barbShaper_cord=" + $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1];
+    } else {
         alert("Scout report not found. ");
     }
 }
-
-
-
