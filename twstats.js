@@ -15,6 +15,8 @@ We don't automate worlds, just change "worldCount". It's possible to automate wo
 
 */
 
+// TODO Automate this a bit, use get to see if player played that world?
+
 var worldCount = 110;
 var currentURL = window.location.href 
 var id = currentURL.substring(currentURL.indexOf('id=') + 3).replace(/\D/g,'');
