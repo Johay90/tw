@@ -6,7 +6,7 @@ Next TODOs
 
 
 COMMENT
-1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png) which I found on the forum. I loved the idea behind this. I'm aware this idea was never TW approved, but fuck it. It's not breaking any rules; the idea is really cool. My implementation is much much more simpler.
+1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png). My implementation is much much more simpler (we don't loop reports, it's single village only, like any other barb script. Using the map just feels better/quicker).
 
 2) Way I coded the function reloadUI is horriiiible, by the time I finished it i'm just to lazy to implement another apporach, but it's bad.
 
