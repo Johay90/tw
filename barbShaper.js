@@ -1,12 +1,71 @@
-/* -- WIP, done soon.
+/* -- It works now, still want to add quite a bit more. Let me know re: bugs
 
 Next TODOs
-- Sending and click events/checks for this (saving this for last since we don't have cats unlocked yet....)
 - Notebook
+- Multiple villas
+- Select closest from a report in the past 24hr that NEEDs shaping. 
+
+So I think I want to do multiple villages... 
+
+the ideal apporach
+
+var villages = [
+  {
+    cords: "123|456",
+    report_date: "date",
+    headquarters: 1,
+    barracks: 0,
+    stable: 0,
+    workshop: 0,
+    smithy: 0,
+    rally: 0,
+    market: 0,
+    timber: 30,
+    clay: 30,
+    iron: 30,
+    farm: 1,
+    hiding: 10,
+    warehouse: 30
+  },
+  {
+    cords: "555|555",
+    report_date: "date",
+    headquarters: 1,
+    barracks: 0,
+    stable: 0,
+    workshop: 0,
+    smithy: 0,
+    rally: 0,
+    market: 0,
+    timber: 30,
+    clay: 30,
+    iron: 30,
+    farm: 1,
+    hiding: 10,
+    warehouse: 30
+  }
+];
+// make sure to make long term cookie...
+// store object in a cookie, if cookie doens't exist (TODO: add check for exist)
+$.cookie("multipleVillages_test", JSON.stringify(villages));
+
+// get obj from cookie
+var villages = $.parseJSON($.cookie("multipleVillages_test"));
+
+//add to array
+villages.push(
+    { 'cords' : 'xxx|xxx', 'report_date' : "date" } // and the rest
+);
+
+// we can off course once we get the obj from cookie delete rows.
+
+// push new data
+$.cookie("multipleVillages_test", JSON.stringify(villages));
+
 
 
 COMMENT
-1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png). My implementation is much much more simpler (we don't loop reports, it's single village only, like any other barb script. Using the map just feels better/quicker).
+1) The UI and idea is completetly ripped from https://puu.sh/Dis7z.mp4 (https://i.gyazo.com/1847222f0bed892b6a97c950e8530052.png). My implementation is much much more simpler (read: worse).
 
 2) Way I coded the function reloadUI is horriiiible, by the time I finished it i'm just to lazy to implement another apporach, but it's bad.
 
@@ -40,48 +99,51 @@ function buildCheck(name) { // This was a silly/bad way to do this, but meh.
     }
 }
 
+var x;
 var sendCats;
 var catTable = [0, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 7, 8, 8, 9, 10, 10, 11, 12, 13, 15, 16, 17, 19, 20];
 
 var desiredLevel = {
-    headquarters: 1,
+    main: 1,
     barracks: 0,
     stable: 0,
-    workshop: 0,
-    smithy: 0,
-    rally: 0,
+    garage: 0,
+    snob: 0,
+    smith: 0,
+    place: 0,
     market: 0,
-    timber: 30,
-    clay: 30,
+    wood: 30,
+    stone: 30,
     iron: 30,
     farm: 1,
-    hiding: 10,
-    warehouse: 30
+    hide: 10,
+    storage: 30
 };
 
 var currentLevel = {
-    headquarters: parseInt(buildCheck("barbShaper_main")),
+    main: parseInt(buildCheck("barbShaper_main")),
     barracks: parseInt(buildCheck("barbShaper_barracks")),
     stable: parseInt(buildCheck("barbShaper_stable")),
-    workshop: parseInt(buildCheck("barbShaper_barracks")), // ??
-    smithy: parseInt(buildCheck("barbShaper_smith")),
-    rally: parseInt(buildCheck("barbShaper_place")),
+    garage: parseInt(buildCheck("barbShaper_garage")), // CONFIRM THIS??
+    snob: parseInt(buildCheck("barbShaper_snob")), // CONFIRM THIS??
+    smith: parseInt(buildCheck("barbShaper_smith")),
+    place: parseInt(buildCheck("barbShaper_place")),
     market: parseInt(buildCheck("barbShaper_market")),
-    timber: parseInt(buildCheck("barbShaper_wood")),
-    clay: parseInt(buildCheck("barbShaper_stone")),
+    wood: parseInt(buildCheck("barbShaper_wood")),
+    stone: parseInt(buildCheck("barbShaper_stone")),
     iron: parseInt(buildCheck("barbShaper_iron")),
     farm: parseInt(buildCheck("barbShaper_farm")),
-    hiding: parseInt(buildCheck("barbShaper_hide")),
-    warehouse: parseInt(buildCheck("barbShaper_storage"))
+    hide: parseInt(buildCheck("barbShaper_hide")),
+    storage: parseInt(buildCheck("barbShaper_storage"))
 };
 
 function updateUI(buildName) {
     var html = "<td align='center' class='lit-item'>" + currentLevel[buildName] + "</td><td align='center' class='lit-item'>" + desiredLevel[buildName];
     var button = "<td align='center' class='lit-item'><button class='attack btn btn-attack btn-target-action' type='button' value=" + buildName + " name='catButton'>Send Attack!</button></td>";
 
-    if (buildName == "hiding") {
+    if (buildName == "hide") {
         return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
-    } else if (['warehouse', 'iron', 'clay', 'timber'].indexOf(buildName) >= 0) {
+    } else if (['storage', 'iron', 'stone', 'wood'].indexOf(buildName) >= 0) {
 
         if (parseInt(currentLevel[buildName]) == parseInt(desiredLevel[buildName])) {
             return html + "</td><td align='center' class='lit-item'><img width='15px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/tick.png'></td><td align='center' class='lit-item'></td>";
@@ -178,19 +240,20 @@ if (game_data['screen'] == "map") {
                     <th style='text-align:center !important'>Target</th>\
                     <th style='text-align:center !important'>Shaped</th>\
                     <th style='text-align:center !important'>Button</th>\
-                    <tr title='Headquarters'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hq.png'></td> " + updateUI('headquarters') + "\
+                    <tr title='Headquarters'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hq.png'></td> " + updateUI('main') + "\
                     <tr title='Barracks'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rax.png'></td> " + updateUI('barracks') + "\
                     <tr title='Stable'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stable.png'></td> " + updateUI('stable') + "\
-                    <tr title='Workshop'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/workshop.png'></td> " + updateUI('workshop') + "\
-                    <tr title='Smithy'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/smith.png'></td> " + updateUI('smithy') + "\
-                    <tr title='Rally Point'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rally.png'></td> " + updateUI('rally') + "\
+                    <tr title='Workshop'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/workshop.png'></td> " + updateUI('garage') + "\
+                    <tr title='Academy'><td align='center' class='lit-item'><img width='30px' src=''></td> " + updateUI('snob') + "\
+                    <tr title='Smithy'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/smith.png'></td> " + updateUI('smith') + "\
+                    <tr title='Rally Point'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/rally.png'></td> " + updateUI('place') + "\
                     <tr title='Market'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/market.png'></td> " + updateUI('market') + "\
-                    <tr title='Timber'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/wood.png'></td> " + updateUI('timber') + "\
-                    <tr title='Clay'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stone.png'></td> " + updateUI('clay') + "\
+                    <tr title='Timber'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/wood.png'></td> " + updateUI('wood') + "\
+                    <tr title='Clay'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/stone.png'></td> " + updateUI('stone') + "\
                     <tr title='Iron'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/iron.png'></td> " + updateUI('iron') + "\
                     <tr title='Farm'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/farm.png'></td> " + updateUI('farm') + "\
-                    <tr title='Warehouse'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('warehouse') + "\
-                    <tr title='Hiding Place'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hiding') + "\
+                    <tr title='Warehouse'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/storage.png'></td> " + updateUI('storage') + "\
+                    <tr title='Hiding Place'><td align='center' class='lit-item'><img width='30px' src='https://raw.githubusercontent.com/Johay90/tw/master/res/hide.png'></td> " + updateUI('hide') + "\
                     </tbody></table>");
 
                 $("#shapeHeader").css({
@@ -228,13 +291,41 @@ if (game_data['screen'] == "map") {
                 });
                 $('button[name="catButton"]').click(function () {
                     sendCats = catTable[currentLevel[this.value]];
-                    /* following code is for our "success" click event later on. */
-                    currentLevel[this.value] = currentLevel[this.value] - 1;
+                    x = this.value;
+                    var dialog = setInterval(function () {
+                        if ($('#popup_box_popup_command').length) {
+                            $('#unit_input_catapult').val(sendCats);
+                            clearInterval(dialog);
+
+                            $('#target_attack').click(function () {
+                                var dialog2 = setInterval(function () {
+                                    if ($('#ds_body > div.autoHideBox.error').text() == "No units selected") {
+                                        clearInterval(dialog2);
+                                        console.log("No cats selected. This should not happen, please report.");
+                                    } else if ($('#ds_body > div.autoHideBox.error').text() == "Not enough units available") {
+                                        clearInterval(dialog2);
+                                        console.log("Not enough cats, closing attack dialog.");
+                                        $('#popup_box_popup_command > div > a')[0].click();
+                                    } else if ($('#place_confirm_catapult_target').length) {
+                                        clearInterval(dialog2);
+                                        $('#place_confirm_catapult_target > table > tbody > tr > td:nth-child(2) > select').val(x);
+
+                                        $('#troop_confirm_go').click(function () {
+                                            currentLevel[x] = currentLevel[x] - 1;
+                                            $.cookie("barbShaper_" + x, currentLevel[x]);
+                                            updateContent();
+                                        });
+
+                                    }
+                                }, 100);
+
+
+                            });
+                        }
+                    }, 100);
                     CommandPopup.openRallyPoint({
                         target: barbTarget.id
                     });
-                    updateContent();
-                    /* */
                 });
             }
             updateContent();
@@ -257,7 +348,7 @@ if (game_data['screen'] == "report") {
 
     if ($('#attack_spy_buildings_left').length) {
         var json = JSON.parse($('#attack_spy_building_data').val());
-        var arrBuildName = ["main", "cord", "barracks", "stable", "smith", "place", "market", "wood", "stone", "iron", "farm", "hide", "storage"]; // need to add stbale + workshop
+        var arrBuildName = ["main", "cord", "barracks", "stable", "snob", "garage", "smith", "place", "market", "wood", "stone", "iron", "farm", "hide", "storage"];
         for (let index = 0; index <= arrBuildName.length; index++) {
             delete_cookie('barbShaper_' + arrBuildName[index]);
         }

@@ -34,11 +34,11 @@
                         url: villageURL,
                         success: function (p) {
                             if (!$(p).find('#content_value > table > tbody > tr:contains("Player:")').length && $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text()) {
-                                console.log("This is a barb --> " + $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
+                                $('#loading > h1').text("Checking for new farms, please wait. This could take a while. This is a barb --> " + $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
                                 report = report.split(/\(([^)]+)\)/)[3];
                                 reportArr.push(report);
                             } else {
-                                console.log("This is not a barb-> " + $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
+                                $('#loading > h1').text("Checking for new farms, please wait. This could take a while. This is not a barb-> " + $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
                             }
                         }
                     });
