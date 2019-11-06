@@ -3,9 +3,9 @@
         - Paste a list of barb cords into listOfCords
         - Filters: Loot assist > (pref green/yellow)
 
-        Script will basically give you a list of cords you need to attack (not found in reports). 
+        Script will basically give you a list of cords you need to attack (not found in reports). It will also strip any players villages (barbs only). 
 
-        Hmm, returns err=>429 if dev tools is not open.... ????
+        After using this you can use the cords (c/p) into a farm script to attack or scout them to push them onto your LA. That is the main purpose of this script.
         */
 
         $("<div id='loading'><h1>Checking for new farms, please wait. This could take a while.</h1></div>").insertBefore("#content_value > h2");
@@ -16,14 +16,11 @@
     if (game_data.screen == "report") {
         var reportArr = [];
         var textArea;
-
-        var x = $.when();
-
-        // TMRW note, maybe fuck promises?
-        // also get rid of loops, can just do it by var total and call it in success.
+        var total = $('#report_list > tbody  > tr').length;
+        var i = 0;
 
         function checkReport(report, reportLink) {
-            return $.ajax({
+            $.ajax({
                 url: reportLink,
                 success: function (data) {
                     var villageURL = ($(data).find('#attack_info_def > tbody > tr:contains("Destination")').find("a:first").attr("href"));
@@ -35,39 +32,35 @@
                                 report = report.split(/\(([^)]+)\)/)[3];
                                 reportArr.push(report);
                             } else {
-                                $('#loading > h1').text("Checking for new farms, please wait. This could take a while. This is not a barb-> " + $(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
+                                var index = listOfCords.indexOf($(p).find('#content_value > table > tbody > tr > td:contains("Coordinates")').find("td:eq(2)").text());
+                                if (index > -1) {
+                                    listOfCords.splice(index, 1);
+                                }
                             }
+                            i++;
+                            getReports();
                         }
                     });
                 },
             });
         }
 
-        var total = $('#report_list > tbody  > tr').length;
-        var i = 0;
-
-        $('#report_list > tbody  > tr').each(function (index) {
-            var report = $.trim($('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link > span').text())
-            var reportLink = $('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link').attr("href");
-            x = x.then(function () {
-                    i++;
-                    return checkReport(report, reportLink);
-            });
-        })
-
-        var lazy = setInterval(function() {
-            if (total == i) {
+        function getReports() {
+            if (i <= total) {
+                var report = $.trim($('#report_list > tbody > tr:nth-child(' + i + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link > span').text());
+                var reportLink = $('#report_list > tbody > tr:nth-child(' + i + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link').attr("href");
+                checkReport(report, reportLink);
+            } else {
                 sort();
-                clearInterval(lazy);
             }
-        }, 100);
+        }
 
-
-        function sort(){
+        function sort() {
             $('#loading > h1').remove();
             var newFarms = listOfCords.filter(function (obj) {
                 return reportArr.indexOf(obj) == -1;
             });
+            console.log(newFarms);
             for (let index = 0; index < newFarms.length; index++) {
                 if (index > 0) {
                     textArea += newFarms[index] + " ";
@@ -84,5 +77,7 @@
 
             $("<textarea rows='6' cols='100'>" + textArea + "</textarea>").insertBefore("#content_value > h2");
         }
+
+        getReports();
 
     }
