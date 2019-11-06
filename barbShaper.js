@@ -45,23 +45,6 @@ var villages = [
     warehouse: 30
   }
 ];
-// make sure to make long term cookie...
-// store object in a cookie, if cookie doens't exist (TODO: add check for exist)
-$.cookie("multipleVillages_test", JSON.stringify(villages));
-
-// get obj from cookie
-var villages = $.parseJSON($.cookie("multipleVillages_test"));
-
-//add to array
-villages.push(
-    { 'cords' : 'xxx|xxx', 'report_date' : "date" } // and the rest
-);
-
-// we can off course once we get the obj from cookie delete rows.
-
-// push new data
-$.cookie("multipleVillages_test", JSON.stringify(villages));
-
 
 
 COMMENT
@@ -342,6 +325,28 @@ SCOUTING
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 if (game_data['screen'] == "report") {
+    var cookieName = "multipleVillages_test";
+    var villages = [];
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
+    // push new data
+    // $.cookie(cookieName, JSON.stringify(villages));
+
+    if (typeof $.cookie(cookieName) === "undefined") {
+        console.log("not exist");
+        $.cookie(cookieName, JSON.stringify(villages), {
+            expires: 365
+        });
+    } else {
+        console.log("It's a thing");
+        villages = $.parseJSON($.cookie(cookieName));
+    }
+
+
+
     var delete_cookie = function (name) {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     };
@@ -352,11 +357,42 @@ if (game_data['screen'] == "report") {
         for (let index = 0; index <= arrBuildName.length; index++) {
             delete_cookie('barbShaper_' + arrBuildName[index]);
         }
+        document.cookie = "barbShaper_cord=" + $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1];
         for (var i = 0; i < json.length; i++) {
             var obj = json[i];
+            var currKey = obj.id;
             document.cookie = "barbShaper_" + obj.id + "=" + obj.level;
+
+            var index = villages.findIndex(villages => villages.cords === $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1])
+
+            if (index != -1) {
+                // if we need to override we can also do villages[index] = {key:value, key2:value2}
+                villages[index][obj.id] = obj.level;
+                villages[index]['report_date'] = dateTime;
+
+                /* if we want to assign new key (and value) do this.
+                Object.assign(villages[index], 
+                {
+                    'key':value
+                }
+                    );
+                */
+
+            } else {
+                villages.push({
+                    'cords': $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1],
+                    currKey: obj.level,
+                }, );
+            }
+
+
         }
-        document.cookie = "barbShaper_cord=" + $('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1];
+
+        $.cookie(cookieName, JSON.stringify(villages), {
+            expires: 365
+        });
+
+        console.log(villages);
     } else {
         alert("Scout report not found. ");
     }
