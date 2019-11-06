@@ -359,14 +359,14 @@ function setLocalStorageRow(e) {
 }
 
 function reportSettings(e, t) {
-   return 0 <= e.html().indexOf("blue") && t[s.blue] ? (reason.push("Report is blue"), void(hideRow = !0)) : 0 <= e.html().indexOf("green") && t[s.green] ? (reason.push("Report is green"), void(hideRow = !0)) : 0 <= e.html().indexOf("yellow") && t[s.yellow] ? (reason.push("Report is yellow"), void(hideRow = !0)) : 0 <= e.html().indexOf("red_yellow") && t[s.red_yellow] ? (reason.push("Report is red_yellow"), void(hideRow = !0)) : 0 <= e.html().indexOf("red_blue") && t[ki.red_blue] ? (reason.push("Report is red_blue"), void(hideRow = !0)) : 0 <= e.html().indexOf("red") && t[s.red] ? (reason.push("Report is red"), void(hideRow = !0)) : void 0
+   return 0 <= e.html().indexOf("blue") && t[ki.blue] ? (reason.push("Report is blue"), void(hideRow = !0)) : 0 <= e.html().indexOf("green") && t[ki.green] ? (reason.push("Report is green"), void(hideRow = !0)) : 0 <= e.html().indexOf("yellow") && t[ki.yellow] ? (reason.push("Report is yellow"), void(hideRow = !0)) : 0 <= e.html().indexOf("red_yellow") && t[ki.red_yellow] ? (reason.push("Report is red_yellow"), void(hideRow = !0)) : 0 <= e.html().indexOf("red_blue") && t[ki.red_blue] ? (reason.push("Report is red_blue"), void(hideRow = !0)) : 0 <= e.html().indexOf("red") && t[ki.red] ? (reason.push("Report is red"), void(hideRow = !0)) : void 0
 }
 
 function haulSettings(e, t) {
    if (t[ki.enable_hauls]) {
-      if (0 <= e.html().indexOf("max_loot/1") && t[s.full]) return reason.push("Haul is full"), void(hideRow = !0);
-      if (0 <= e.html().indexOf("max_loot/0") && t[s.partial]) return reason.push("Haul is partial"), void(hideRow = !0);
-      if (-1 == e.html().indexOf("max_loot") && t[s.full]) return reason.push("No haul graphic"), void(hideRow = !0)
+      if (0 <= e.html().indexOf("max_loot/1") && t[ki.full]) return reason.push("Haul is full"), void(hideRow = !0);
+      if (0 <= e.html().indexOf("max_loot/0") && t[ki.partial]) return reason.push("Haul is partial"), void(hideRow = !0);
+      if (-1 == e.html().indexOf("max_loot") && t[ki.full]) return reason.push("No haul graphic"), void(hideRow = !0)
    }
 }
 
@@ -377,7 +377,7 @@ function hideRecentlyFarmed(e, t) {
       var i = new Date(window.top.$.jStorage.get(localTitle)),
          n = currentGameTime.getTime() - i.getTime(),
          r = Math.abs(parseInt(n / 1e3 / 60));
-      switch (t[s.sent_time_filter]) {
+      switch (t[ki.sent_time_filter]) {
          case "hide":
             if (r < parseInt(t[ki.hide_recent_time])) return reason.push("Village was recently sent to " + r + " minutes ago"), void(hideRow = !0);
             break;
