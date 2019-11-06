@@ -99,7 +99,7 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
    availableLangs = ["en", "es", "el", "ar", "it"];
 
 function run() {
-   console.log("run"), checkVersion(), checkWorking(), setVersion(), makeItPretty(), showSettings(), turnOnHotkeys(), hotkeysOnOff(), 0 != userset[s.enable_auto_run] && applySettings()
+   console.log("run"), checkVersion(), checkWorking(), setVersion(), makeItPretty(), showSettings(), turnOnHotkeys(), hotkeysOnOff(), 0 != userset[ki.enable_auto_run] && applySettings()
 }
 
 function checkVersion() {
@@ -144,7 +144,7 @@ function showAllRows() {
 function getPage(t, o) {
    if (t < o) {
       changeHeader(filter_41 + " " + (t + 1) + "/" + o + " <img src='graphic/throbber.gif' height='24' width='24'></img>");
-      var e = link[0] + window.top.game_data.village.id + "&order=" + userset[s.order_by] + "&dir=" + userset[s.direction] + "&Farm_page=" + t + "&screen=am_farm";
+      var e = link[0] + window.top.game_data.village.id + "&order=" + userset[ki.order_by] + "&dir=" + userset[ki.direction] + "&Farm_page=" + t + "&screen=am_farm";
       window.top.$.ajax({
          type: "GET",
          url: e,
@@ -633,7 +633,7 @@ function turnOnHotkeys() {
 }
 
 function tryClick(e) {
-   cansend && filtersApplied && (checkIfNextVillage() || (console.log(e.html()), e.hasClass("farm_icon_disabled") || null == e.html() ? (window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500), e.closest("tr").hide()) : (e.click(), userset[s.next_village_scouts] || userset[s.next_village_farming_troops], doTime(200))))
+   cansend && filtersApplied && (checkIfNextVillage() || (console.log(e.html()), e.hasClass("farm_icon_disabled") || null == e.html() ? (window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500), e.closest("tr").hide()) : (e.click(), userset[ki.next_village_scouts] || userset[ki.next_village_farming_troops], doTime(200))))
 }
 
 function doTime(e) {
