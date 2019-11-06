@@ -5,6 +5,7 @@
 
         Script will basically give you a list of cords you need to attack (not found in reports). 
 
+        Hmm, returns err=>429 if dev tools is not open.... ????
         */
 
         $("<div id='loading'><h1>Checking for new farms, please wait. This could take a while.</h1></div>").insertBefore("#content_value > h2");
@@ -17,6 +18,9 @@
         var textArea;
 
         var x = $.when();
+
+        // TMRW note, maybe fuck promises?
+        // also get rid of loops, can just do it by var total and call it in success.
 
         function checkReport(report, reportLink) {
             return $.ajax({
@@ -35,7 +39,7 @@
                             }
                         }
                     });
-                }
+                },
             });
         }
 
@@ -46,9 +50,9 @@
             var report = $.trim($('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link > span').text())
             var reportLink = $('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link').attr("href");
             x = x.then(function () {
-                i++;
-                return checkReport(report, reportLink);
-            })
+                    i++;
+                    return checkReport(report, reportLink);
+            });
         })
 
         var lazy = setInterval(function() {
