@@ -1,8 +1,9 @@
-/*
+/* 
 
-Next TODOs
-- Notebook
-- Add a h3 or something for mass scouting to show we're in progress.
+URL: https://raw.githubusercontent.com/Johay90/tw/master/barbShaper.js
+Author: Johay
+
+* Feel free to report bugs (PM or create an issue on git).
 
 To gather reports run on the report page (where it shows you a list of reports). The script will mass gather these reports. I would advise running on the LA report page, so you don't gather "player" reports.
 
@@ -312,6 +313,19 @@ if (game_data['screen'] == "map") {
                         villages.splice(closestIndex, 1);
                         localStorage.setItem(storageName, JSON.stringify(villages));
                         execute();
+                    })
+                    $("#notepadButton").click(function () {
+                        var notepadString = "[b]This village was shaped by [player]"+game_data.player.name+"[/player] on [u]"+dateTime+"[/u][/b] \n[table]\n[**]Building[||]Current Level[||]Target Level[/**]\n";
+
+                        const keys = Object.keys(villages[closestIndex]);
+                        for (let index = 0; index < keys.length; index++) {
+                            if (keys[index] != "cords" && keys[index] != "report_date" && keys[index] != "wall") {
+                                notepadString += "[*][building]" + keys[index] + "[/building][|]" + villages[closestIndex][keys[index]] + "[|]" + desiredLevel[keys[index]] + "\n";
+                            }
+                        }
+                        notepadString += "[/table]";
+                        var dummy = $('<input>').val(notepadString).appendTo('body').select();
+                        document.execCommand('copy');
                     })
                 }
                 updateContent();
