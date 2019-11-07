@@ -329,9 +329,14 @@ MASS-SCOUTING (This section will be used, ie 'normal scouting' will be removed)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 if (game_data['screen'] == "report") {
+    if (!$('#gatherReportDiv').length) {
+        $("<h3><div id='gatherReportDiv'></div></h3>").insertBefore('#content_value > h2');
+        $('#gatherReportDiv').text("This will lag your tab while processing.");
+        $('#gatherReportDiv').css("color", "red");
+    }
     var villages = [];
 
-    if (localStorage.getItem(storageName) != null) {
+    if (localStorage.getItem(storageName) == null) {
         localStorage.setItem(storageName, JSON.stringify(villages))
     } else {
         villages = $.parseJSON(localStorage.getItem(storageName));
@@ -356,6 +361,7 @@ if (game_data['screen'] == "report") {
                         $.ajax({
                             url: $('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link').attr("href"),
                             success: function (data) {
+                                $('#gatherReportDiv').text("Adding scouting report. Current Index: " + index + "/" + total + " this may lag while processing, let it finish.");
                                 if ($(data).find('#attack_spy_buildings_left').length) {
                                     var json = JSON.parse($(data).find('#attack_spy_building_data').val());
                                     for (var i = 0; i < json.length; i++) {
@@ -397,7 +403,8 @@ if (game_data['screen'] == "report") {
                 scoutLoop();
             }
         } else {
-            localStorage.setItem(storageName, JSON.stringify(villages))
+            localStorage.setItem(storageName, JSON.stringify(villages));
+            $('#gatherReportDiv').text("Done gathering reports.");
         }
     }
     scoutLoop();
