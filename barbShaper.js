@@ -3,48 +3,9 @@
 Next TODOs
 - Notebook
 - Multiple villas
-- Select closest from a report in the past 24hr that NEEDs shaping. 
+- Select closest from a report in the past 24-72hr that NEEDs shaping (need to decide number) 
 
-So I think I want to do multiple villages... 
-
-the ideal apporach
-
-var villages = [
-  {
-    cords: "123|456",
-    report_date: "date",
-    headquarters: 1,
-    barracks: 0,
-    stable: 0,
-    workshop: 0,
-    smithy: 0,
-    rally: 0,
-    market: 0,
-    timber: 30,
-    clay: 30,
-    iron: 30,
-    farm: 1,
-    hiding: 10,
-    warehouse: 30
-  },
-  {
-    cords: "555|555",
-    report_date: "date",
-    headquarters: 1,
-    barracks: 0,
-    stable: 0,
-    workshop: 0,
-    smithy: 0,
-    rally: 0,
-    market: 0,
-    timber: 30,
-    clay: 30,
-    iron: 30,
-    farm: 1,
-    hiding: 10,
-    warehouse: 30
-  }
-];
+-- make sure it's a barb, not a player!! (do this in map section)
 
 
 COMMENT
@@ -336,12 +297,10 @@ if (game_data['screen'] == "report") {
     // $.cookie(cookieName, JSON.stringify(villages));
 
     if (typeof $.cookie(cookieName) === "undefined") {
-        console.log("not exist");
         $.cookie(cookieName, JSON.stringify(villages), {
             expires: 365
         });
     } else {
-        console.log("It's a thing");
         villages = $.parseJSON($.cookie(cookieName));
     }
 
@@ -396,4 +355,98 @@ if (game_data['screen'] == "report") {
     } else {
         alert("Scout report not found. ");
     }
+}
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+MASS-SCOUTING (This section will be used, ie 'normal scouting' will be removed)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+if (game_data['screen'] == "report") {
+    var cookieName = "multipleVillages_test";
+    var villages = [];
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
+    if (typeof $.cookie(cookieName) === "undefined") {
+        $.cookie(cookieName, JSON.stringify(villages), {
+            expires: 365
+        });
+    } else {
+        villages = $.parseJSON($.cookie(cookieName));
+    }
+
+
+    var total = $('#report_list > tbody > tr').length;
+    var index = 0;
+    var i = 0;
+    var retries = 0;
+
+    function nextImg() {
+        i++;
+        scoutLoop();
+    }
+
+    function scoutLoop() {
+        if (total >= index) {
+            if (i <= 5) {
+                if ($('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > div > img:nth-child(' + i + ')').length) {
+                    if ($('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > div > img:nth-child(' + i + ')').attr("src").indexOf("spy") != -1) {
+                        $.ajax({
+                            url: $('#report_list > tbody > tr:nth-child(' + index + ') > td:nth-child(2) > span.quickedit.report-title > span > a.report-link').attr("href"),
+                            success: function (data) {
+                                console.log("Adding scouting report. Current Index: " + index + "/" + total)
+                                if ($(data).find('#attack_spy_buildings_left').length) {
+                                    var json = JSON.parse($(data).find('#attack_spy_building_data').val());
+                                    var arrBuildName = ["main", "cord", "barracks", "stable", "snob", "garage", "smith", "place", "market", "wood", "stone", "iron", "farm", "hide", "storage"];
+                                    for (var i = 0; i < json.length; i++) {
+                                        var obj = json[i];
+                                        var arrIndex = villages.findIndex(villages => villages.cords === $(data).find('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1])
+
+                                        if (arrIndex != -1) {
+                                            villages[arrIndex][obj.id] = obj.level;
+                                            villages[arrIndex]['report_date'] = dateTime;
+                                        } else {
+                                            villages.push({
+                                                'cords': $(data).find('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1],
+                                                [obj.id]: obj.level,
+                                            }, );
+                                        }
+                                    }
+                                } else {
+                                    retries++
+                                    if (retries >= 5) {
+                                        alert("Lots of errors. Make sure you're on LA page, with scout reports. Also refresh the page for new reports.");
+                                    }
+                                    scoutLoop();
+                                }
+                                index++;
+                                i = 0;
+                                scoutLoop();
+                            }
+
+                        });
+                    } else {
+                        nextImg();
+                    }
+                } else {
+                    nextImg();
+                }
+            } else if (i > 5) {
+                i = 0;
+                index++;
+                scoutLoop();
+            }
+        } else{
+            $.cookie(cookieName, JSON.stringify(villages), {
+                expires: 365
+            });
+    
+            console.log(villages);
+        }
+    }
+    scoutLoop();
 }
