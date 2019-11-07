@@ -27,7 +27,7 @@ var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getD
 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 var dateTime = date + ' ' + time;
 
-var storageName = "multipleVillages_test";
+var storageName = "johays_Shaper";
 var x;
 var sendCats;
 var catTable = [0, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 7, 8, 8, 9, 10, 10, 11, 12, 13, 15, 16, 17, 19, 20];
@@ -158,8 +158,13 @@ if (game_data['screen'] == "map") {
                         barbTarget.name = TWMap.villages[Object.keys(TWMap.villages)[index]].name;
                         barbTarget.points = TWMap.villages[Object.keys(TWMap.villages)[index]].points;
                         barbTarget.id = TWMap.villages[Object.keys(TWMap.villages)[index]].id
+                        barbTarget.owner = TWMap.villages[Object.keys(TWMap.villages)[index]].owner
                         break;
                     }
+                }
+
+                if (barbTarget.owner != "0") {
+                    alert("This village is a plyer owned village, just so you're aware.");
                 }
 
                 catTravelTime = 30;
