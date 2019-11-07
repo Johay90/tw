@@ -5,6 +5,7 @@ Next TODOs
 - Multiple villas
 - Select closest from a report in the past 24-72hr that NEEDs shaping (need to decide number) 
 
+-- add a h3 or something for mass scouting to show we're in progress.
 -- make sure it's a barb, not a player!! (do this in map section)
 
 
@@ -364,19 +365,17 @@ MASS-SCOUTING (This section will be used, ie 'normal scouting' will be removed)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 if (game_data['screen'] == "report") {
-    var cookieName = "multipleVillages_test";
+    var storageName = "multipleVillages_test";
     var villages = [];
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
 
-    if (typeof $.cookie(cookieName) === "undefined") {
-        $.cookie(cookieName, JSON.stringify(villages), {
-            expires: 365
-        });
+    if (localStorage.getItem(storageName) != null) {
+        localStorage.setItem(storageName, JSON.stringify(villages))
     } else {
-        villages = $.parseJSON($.cookie(cookieName));
+        $.parseJSON(localStorage.getItem(storageName));
     }
 
 
@@ -401,7 +400,6 @@ if (game_data['screen'] == "report") {
                                 console.log("Adding scouting report. Current Index: " + index + "/" + total)
                                 if ($(data).find('#attack_spy_buildings_left').length) {
                                     var json = JSON.parse($(data).find('#attack_spy_building_data').val());
-                                    var arrBuildName = ["main", "cord", "barracks", "stable", "snob", "garage", "smith", "place", "market", "wood", "stone", "iron", "farm", "hide", "storage"];
                                     for (var i = 0; i < json.length; i++) {
                                         var obj = json[i];
                                         var arrIndex = villages.findIndex(villages => villages.cords === $(data).find('#attack_info_def > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)').text().split(/\(([^)]+)\)/)[1])
@@ -441,9 +439,7 @@ if (game_data['screen'] == "report") {
                 scoutLoop();
             }
         } else{
-            $.cookie(cookieName, JSON.stringify(villages), {
-                expires: 365
-            });
+            localStorage.setItem(storageName, JSON.stringify(villages))
     
             console.log(villages);
         }
