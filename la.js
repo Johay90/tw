@@ -819,5 +819,6 @@ window.top.$.getScript(scriptURL + "lib/jstorage.js", function () {
 
 $('#plunder_list').find('tr').find("td > a[onclick*='openRallyPoint']").click( function(){
    var rowInt = $(this).closest('tr').index()+1;
+   console.log("... " + rowInt);
    $('#plunder_list > tbody > tr:nth-child('+rowInt+') > td').css('background-color', "#56f05e");
  });
