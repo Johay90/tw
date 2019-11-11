@@ -84,7 +84,7 @@ if (game_data['screen'] == "map") {
             alert("Could not find any scout reports.");
         } else {
             var villages = $.parseJSON(localStorage.getItem(storageName));
-            var main = game_data.village.coord.split("|"); // TODO: need to add curr village
+            var main = game_data.village.coord.split("|");
             var min = Infinity;
             var closestIndex;
             var timeFrame = 72;

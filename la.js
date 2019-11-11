@@ -816,3 +816,8 @@ window.top.$.getScript(scriptURL + "lib/jstorage.js", function () {
       })
    }), window.top.$.getScript(scriptURL + "notify.js")
 }), window.top.$(document).off();
+
+$('#plunder_list').find('tr').find("td > a[onclick*='openRallyPoint']").click( function(){
+   var rowInt = $(this).closest('tr').index()+1;
+   $('#plunder_list > tbody > tr:nth-child('+rowInt+') > td').css('background-color', "#56f05e");
+ });
